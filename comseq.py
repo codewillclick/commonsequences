@@ -23,10 +23,17 @@ class mark:
 				yield [self.marks[i][0], self.marks[i][1]-self.marks[i-1][1]]
 
 class comseq:
+	'''
+	Class managing the configuration and evaluation of the ordered n-word sequence
+	exercise.  Call eval(...) to evaluate against options provided by sys.argv.
+	'''
 	def __init__(self, norm=None, enkey=None):
-		self.reset()	
+		self.reset()
+		# These two are only configurable manually, but represent valid word
+		# extraction from word blocks within iteration step.
 		self.word_regex = r'(\w+(\'\w+)*)'
 		self.word_regex_map = lambda r:r[0]
+		# norm() is run to normalize key text, forcing it to lowercase in this case.
 		if norm:
 			self.norm = norm
 		else:
@@ -34,7 +41,9 @@ class comseq:
 				# Normalize case or any other thing of input list.
 				return tuple(map(lambda s:s.lower(),r))
 			self.norm = defnorm
-
+		# enkey() specifies how to convert the sequence list or tuple into a key.
+		# Tuples are already valid keys, but this simplifies things for rendering
+		# purposes.
 		if enkey:
 			self.enkey = enkey
 		else:
@@ -43,6 +52,7 @@ class comseq:
 			self.enkey = defenkey
 	
 	def reset(self):
+		# Reset class instance variables.
 		self.table = {}
 		self.word_count = 0
 		self.seq_count = 0
@@ -50,7 +60,7 @@ class comseq:
 	def eval(self,count=3,argv=sys.argv):
 		# Iterate through all sequences provided input file sources.
 		self.reset()
-		for r in self.iter_all(argv=argv,count=3):
+		for r in self.__iter_all(argv=argv,count=3):
 			# r is a sequence of size count.
 			t = self.norm(r)
 			k = self.enkey(t)
@@ -60,16 +70,16 @@ class comseq:
 			self.table[k] += 1
 			self.word_count += 1
 	
-	def iter_all(self,count=3,argv=sys.argv):
+	def __iter_all(self,count=3,argv=sys.argv):
 		# Use both input_line_iterator() and iter_word_block() to yield sequences.
 		prev = None
-		for block in self.input_line_iterator(argv=argv):
+		for block in self.__input_line_iterator(argv=argv):
 			# Pass prev in to maintain (count-1) words between blocks.
-			for r in self.iter_word_block(block,count=count,prev=prev):
+			for r in self.__iter_word_block(block,count=count,prev=prev):
 				yield r
 				prev = r
 	
-	def input_line_iterator(self,argv=sys.argv):
+	def __input_line_iterator(self,argv=sys.argv):
 		# Run through files in this list.
 		# NOTE: sys.argv logic should be separate from this class.  Consider
 		#   passing in a list of files, and have another object or class manage
@@ -106,7 +116,7 @@ class comseq:
 				if not f.closed:
 					f.close()
 
-	def iter_word_block(self,s,count=3,prev=None):
+	def __iter_word_block(self,s,count=3,prev=None):
 		# Iterate through individual valid words in a word block.
 		# - prev: if a previous sequence exists, pass it in through this param
 		def lshift(r,s):
@@ -162,14 +172,15 @@ if __name__ == '__main__':
 		for k,v in ordered:
 			print('%i - %s' % (v,k))
 
-	# Set up the 
+	# Set up the evaluating class.
 	com = comseq()
 
 	# Run through every sequence.
 	m = mark().mark()
-	com.eval(count=3)
+	com.eval(count=3, argv=sys.argv)
 	m.mark('generated table')
-		
+	
+	# Show what's what.
 	display(com, timer=m, show=100)
 
 

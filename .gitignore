@@ -1,4 +1,5 @@
 
 *.sw?
 */origin-of-species.txt
+__pycache__
 

@@ -1,0 +1,7 @@
+
+2021/04/13
+
+Task is to get a count of three-word sequences from an input body of text.
+
+Pipe in from stdin, or read in from an arbitrary number of files provided by argument.
+

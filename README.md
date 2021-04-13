@@ -6,6 +6,20 @@ Output a list of the N most common K-word sequences in an input text, with count
 100 most common three word sequences
 map between each sequence and number of times encountered
 
+## usage
+
+Using the class itself looks like this.  Gathering the ordering of the most-frequent sequences is implemented within an `if __name__ == 'main'` block.
+
+```python
+import json
+import comseq from comseq
+
+com = comseq()
+com.eval(count=3, argv=sys.argv)
+
+print(json.dumps(com.table,indent=2))
+```
+
 ## tests run
 
 ```shell

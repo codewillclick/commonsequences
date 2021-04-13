@@ -24,8 +24,9 @@ class mark:
 
 class comseq:
 	def __init__(self, norm=None, enkey=None):
-		self.reset()
-		
+		self.reset()	
+		self.word_regex = r'(\w+(\'\w+)*)'
+		self.word_regex_map = lambda r:r[0]
 		if norm:
 			self.norm = norm
 		else:
@@ -114,7 +115,8 @@ class comseq:
 				r[i] = r[i+1]
 			r[-1] = s
 			return r
-		tokens = list(map(lambda r:r[0],re.findall(r'(\w+(\'\w+)*)',s)))
+		#tokens = list(map(lambda r:r[0],re.findall(r'(\w+(\'\w+)*)',s)))
+		tokens = list(map(self.word_regex_map,re.findall(self.word_regex,s)))
 		x = None # starting index for tokens
 		# HACK: Use of prev is a hack.  It works, but I'm sure there's a more elegant
 		#   way to handle the algorithm than passing a previous entry in.
@@ -134,7 +136,7 @@ class comseq:
 
 if __name__ == '__main__':
 	
-	def display(com,timer=mark(),wcount=-1,show=None):
+	def display(com,timer=mark(),show=None):
 		# Display in a pleasing manner the first X number of most frequented sequences.
 		show = show if show else com.seq_count
 		def order(t):
@@ -148,8 +150,8 @@ if __name__ == '__main__':
 		
 		# Print some quick summary info to stderr, in case stdout output is piping
 		# into some other process.
-		if wcount >= 0:
-			print('word count:',wcount, file=sys.stderr)
+		if com.word_count >= 0:
+			print('word count:',com.word_count, file=sys.stderr)
 		print('table entry count:',len(com.table.keys()), file=sys.stderr)
 		print('timing:',file=sys.stderr)
 		for a,b in timer.iter():
@@ -168,6 +170,6 @@ if __name__ == '__main__':
 	com.eval(count=3)
 	m.mark('generated table')
 		
-	display(com, timer=m, wcount=com.word_count, show=100)
+	display(com, timer=m, show=100)
 
 

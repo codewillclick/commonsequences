@@ -12,6 +12,7 @@ argument.
 		. pass n number of words at a time?
 		. no, pass a list or tuple of n words
 			. but only slide the cursor along one word at a time
+		. gotta pass the last sequence from the previous block in
 
 We're supposed to have a count of the K most common sequences.
 
@@ -30,5 +31,17 @@ Unless we use a heap sort insert as we go along?
 
 Just use a dictionary to start with.  Keep things simple and successfully tested
 before getting all fancy.
+
+Downloaded origin-of-species.txt, and ran this against it, placing the output
+under the test/ directory.
+
+Far as I can tell, it's working.  Input via pipe and files specified 
+
+Am I supposed to title the file solution.py?  Or was that simply an example?
+
+Tests...
+
+python3 comseq.py test/origin-of-species.txt > test/origin-of-species.out
+python3 comseq.py test/quick-test.txt test/quick-test-2.txt > test/quick-tests.out
 
 

@@ -8,7 +8,7 @@ map between each sequence and number of times encountered
 
 ## usage
 
-Using the class itself looks like this.  Gathering the ordering of the most-frequent sequences is implemented within an `if __name__ == 'main'` block.
+Using the class itself looks like this.  Gathering the ordering of the most-frequent sequences is implemented within an `if __name__ == '__main__'` block.
 
 ```python
 import json

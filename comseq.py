@@ -31,14 +31,53 @@ def input_line_iterator():
 				s = f.readline()
 			f.close()
 	finally:
+		# Close any unclosed file out.
 		for f in fr:
 			if not f.closed:
 				f.close()
 
+# WARNING: Woops.  New blocks don't keep the previous tokens, so line breaks
+#   end up destroying things.  Need to rethink this.
+
+def iter_word_block(s,count=3,prev=None):
+	# NOTE: Look up re.findall performance when you get a chance.  This should
+	#   work fine so long as the input block isn't enormous.
+	def lshift(r,s):
+		# Shift all elements in an array over one.
+		# NOTE: A mod array would do this efficiently, but again, let's wait before
+		#   implementing the fancy.
+		for i in range(count-1):
+			r[i] = r[i+1]
+		r[-1] = s
+		return r
+	tokens = list(map(lambda r:r[0],re.findall(r'(\w+(\'\w+)*)',s)))
+	x = None
+	if prev:
+		# If previous values are provided...
+		r = [None] + prev[-(count-1):]
+		x = 0
+	else:
+		r = [None] + tokens[:count-1] # going to lshift once
+		x = count-1
+	for i in range(x,len(tokens)):
+		s = tokens[i]
+		lshift(r,s)
+		yield r
+	
+
+def iter_all(count=3,table={}):
+	prev = None
+	for block in input_line_iterator():
+		for r in iter_word_block(block,count=count,prev=prev):
+			yield r
+			prev = r
+
 if __name__ == '__main__':
 	
-	i = 0
-	for s in input_line_iterator():
-		print('i:%i, [%s]' % (i,s))
-		i += 1
+	table = {}
+
+	# Run through every sequence.
+	for r in iter_all(count=3,table=table):
+		print('r',r)
+		
 

@@ -3,5 +3,32 @@
 
 Task is to get a count of three-word sequences from an input body of text.
 
-Pipe in from stdin, or read in from an arbitrary number of files provided by argument.
+Pipe in from stdin, or read in from an arbitrary number of files provided by
+argument.
+
+. Iterate through lines per input file
+	. Each provides blocks of text ending with whole words
+	. Iterate through words per block of text
+		. pass n number of words at a time?
+		. no, pass a list or tuple of n words
+			. but only slide the cursor along one word at a time
+
+We're supposed to have a count of the K most common sequences.
+
+Should I store *all* sequences in a table?
+
+Implementing a tree would save on memory...
+
+Storing only the top most common sequences could work, except... no, if the
+least common sequence suddenly happens a million times in a row, it'd need to
+already be in the table.
+
+For now, let's keep the full count table as we go along, then sort that for the
+final answer.
+
+Unless we use a heap sort insert as we go along?
+
+Just use a dictionary to start with.  Keep things simple and successfully tested
+before getting all fancy.
+
 
